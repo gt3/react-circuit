@@ -1,1 +1,1 @@
-# react-circuit-csp
+# @gt3/csp
