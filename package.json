@@ -1,7 +1,7 @@
 {
   "name": "@gt3/csp",
   "version": "0.0.1",
-  "description": "Future CSP implementation for react-circuit",
+  "description": "Future CSP implementation",
   "main": "./dist/node/index.js",
   "scripts": {
     "test": "cross-env BABEL_ENV=test jest",
@@ -23,9 +23,10 @@
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "cross-env": "^3.1.3",
     "eslint": "^3.2.2",
-    "jest": "^17.0.0"
+    "jest": "^17.0.0",
+    "js-csp": "^0.9"
   },
-  "dependencies": {
+  "peerDependencies": {
     "js-csp": "0.5 - 0.9"
   },
   "files": [
