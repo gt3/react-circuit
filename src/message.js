@@ -1,4 +1,4 @@
-import {NO_VALUE, CLOSED} from './constants'
+import {NO_VALUE, CLOSED} from 'js-csp'
 const checkString = s => !!s.substr
 const defaultError = new Error('Unidentified error')
 const isErroneous = v => (!v && (v !== 0 && v !== '')) || v instanceof Error

@@ -1,5 +1,4 @@
-import { chan, spawn, take, poll, putAsync, operations as ops } from 'js-csp'
-import {CLOSED} from './constants'
+import { chan, spawn, take, poll, putAsync, operations as ops, CLOSED } from 'js-csp'
 import Message from './message'
 
 let noop = () => void (0)

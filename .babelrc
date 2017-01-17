@@ -3,10 +3,5 @@
     ["transform-es2015-modules-commonjs", {
       "loose": true
     }]
-  ],
-  "env": {
-    "test": {
-      "plugins": "rewire-exports"
-    }
-  }
+  ]
 }
