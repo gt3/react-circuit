@@ -1,7 +1,7 @@
 import { chan, spawn, take, poll, putAsync, operations as ops, CLOSED } from 'js-csp'
 import Message from './message'
 
-let noop = () => void (0)
+function noop() {}
 let invoke = Function.prototype.call.bind(Function.prototype.call)
 
 let delayOrNot = (fn, delay = -1) => delay >= 0 ? setTimeout(fn, delay) : fn()
@@ -11,9 +11,10 @@ export let tryCloseAll = (...handles) => {
   if (!handles.length) return tryCloseAllKeys(handles)
   handles.forEach(tryCloseAllKeys)
 }
-export let putter = (c, close, delay) => msg => {
-  if (close) putAsync(c, Message.wrap(msg), () => tryClose(c, delay))
-  else putAsync(c, Message.wrap(msg))
+export let putter = (c, {delay, close, closeDelay} = {}) => msg => {
+  let closeAction = close && tryClose.bind(null, c, closeDelay)
+  let action = putAsync.bind(null, c, Message.wrap(msg), closeAction)
+  delayOrNot(action, delay)
   return msg
 }
 

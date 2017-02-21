@@ -20,7 +20,7 @@ describe('data-loader', function () {
       let success = m => { eq(m, i + 1); done() }
       let failure = m => void (0)
       ias()(fetchSync, success, failure, c)
-      putter(c, true)(i)
+      putter(c, {close: true})(i)
     })
     it('should control processing flow with backpressure support', function (done) {
       let c = chan(4), i = 1, j
@@ -40,7 +40,7 @@ describe('data-loader', function () {
         done()
       }
       ias()(fetchAsyncErr, success, failure, c)
-      putter(c, true)(true)
+      putter(c, {close: true})(true)
     })
     it('should timeout, report error, yield to next request', function (done) {
       let c = chan(2), failed
@@ -65,10 +65,10 @@ describe('data-loader', function () {
       }
       let failure = m => void (0)
       ias()(fetchAsync, success, failure, c1, c2, c3, c4)
-      putter(c1, true)(i)
-      putter(c2, true)(i)
-      putter(c3, true)(i)
-      putter(c4, true)(i)
+      putter(c1, {close: true})(i)
+      putter(c2, {close: true})(i)
+      putter(c3, {close: true})(i)
+      putter(c4, {close: true})(i)
     })
   })
   describe('#initializeAsyncSources #parallel', function () {

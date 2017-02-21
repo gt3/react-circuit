@@ -53,7 +53,7 @@ describe('extensions', function () {
         done()
       }
       let h1 = subscribe(fn, fnErr)
-      putter(takePool.x, true)(err)
+      putter(takePool.x, {close: true})(err)
     })
   })
   describe('#multConnect with proxy', function () {
@@ -179,8 +179,18 @@ describe('extensions', function () {
       })
       putter(c)(msg)
     })
-    it('puts message then closes', function (done) {
-      let c = chan(), putAndClose = putter(c, true)
+    it('puts message with delay', function (done) {
+      let i = 0, c = chan(), putWithDelay = putter(c, {delay: 100})
+      setTimeout(() => ++i, 20)
+      takeAsync(c, m => {
+        assert(i > 0)
+        assert(m.value)
+        done()
+      })
+      putWithDelay(true)
+    })
+    it('puts message with delay then closes', function (done) {
+      let c = chan(), putAndClose = putter(c, {close: true})
       takeAsync(c, m => {
         assert(m.value)
         assert(c.closed)
@@ -189,7 +199,7 @@ describe('extensions', function () {
       putAndClose(true)
     })
     it('puts message then closes with delay', function (done) {
-      let c = chan(), putAndClose = putter(c, true, 0)
+      let c = chan(), putAndClose = putter(c, {close: true, closeDelay: 0})
       takeAsync(c, m => {
         assert(m.value)
         assert(!c.closed)

@@ -28,7 +28,7 @@ function* parallelLoader(fetch, success, error, source, options) {
   let msg
   while ((msg = yield take(source), msg !== CLOSED)) {
     let forked = chan(1)
-    putter(forked, true, 0)(msg)
+    putter(forked, {close: true, closeDelay: 0})(msg)
     go(serialLoader, [fetch, success, error, forked, options])
   }
 }
