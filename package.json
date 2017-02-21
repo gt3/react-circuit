@@ -1,6 +1,6 @@
 {
   "name": "@gt3/csp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Future CSP implementation",
   "main": "./dist/node/index.js",
   "scripts": {
