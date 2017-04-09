@@ -9,17 +9,17 @@ export default class Circuit extends Component {
     return unwrapState(this.prevState)
   }
   bootstrap() {
-    let renderApp = this.renderCircuit.bind(this)
+    let renderCircuit = this.renderCircuit.bind(this)
     let registerRefHandler = this.registerRefHandler.bind(this)
     let { props, context } = this
     let { app, transport, services } = props.children.call(
       null,
-      renderApp,
+      renderCircuit,
       registerRefHandler,
       context
     )
-    let childContext = Object.assign({ renderApp, services }, transport)
-    return { app, transport, services, renderApp, childContext }
+    let childContext = Object.assign({ renderCircuit, services }, transport)
+    return { app, transport, services, renderCircuit, childContext }
   }
   renderCircuit(updater, publisher, args = [], cb) {
     if (publisher) this.publishers.push([publisher, args])
@@ -58,7 +58,7 @@ export default class Circuit extends Component {
 }
 Circuit.propTypes = { children: PropTypes.func.isRequired }
 Circuit.childContextTypes = {
-  renderApp: PropTypes.func,
+  renderCircuit: PropTypes.func,
   intake: PropTypes.object,
   outtake: PropTypes.object,
   services: PropTypes.object

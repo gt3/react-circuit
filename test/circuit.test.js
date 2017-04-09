@@ -32,39 +32,39 @@ describe('Circuit', function() {
   });
   it('should render child with new state and previous state', function() {
     let newState = { x: false };
-    let assert_renderApp = mi => {
+    let assert_renderCircuit = mi => {
       eq(bootstrap.mock.calls.length, 1);
       eq(app.mock.calls.length, 1);
-      let renderApp = bootstrap.mock.calls[0][0];
-      renderApp(() => mountState);
+      let renderCircuit = bootstrap.mock.calls[0][0];
+      renderCircuit(() => mountState);
       eq(app.mock.calls.length, 2);
       eq(app.mock.calls[1][0], mountState);
-      renderApp(() => newState);
+      renderCircuit(() => newState);
       eq(app.mock.calls.length, 3);
       eq(app.mock.calls[2][0], newState);
       eq(app.mock.calls[2][1], mountState);
     };
     R.render(C);
     let instance = R.getMountedInstance();
-    assert_renderApp(instance);
+    assert_renderCircuit(instance);
   });
   it('should not rerender if state has not changed', function() {
     let newState = { x: false };
     R.render(C);
-    let renderApp = bootstrap.mock.calls[0][0];
-    renderApp(() => mountState);
+    let renderCircuit = bootstrap.mock.calls[0][0];
+    renderCircuit(() => mountState);
     eq(app.mock.calls.length, 2);
-    renderApp(() => newState);
+    renderCircuit(() => newState);
     eq(app.mock.calls.length, 3);
-    renderApp(() => newState);
+    renderCircuit(() => newState);
     eq(app.mock.calls.length, 3);
   });
   it('should always rerender on force update with prevState and newState equal', function() {
     let newState = { x: false };
     R.render(C);
     let instance = R.getMountedInstance();
-    let renderApp = bootstrap.mock.calls[0][0];
-    renderApp(() => newState);
+    let renderCircuit = bootstrap.mock.calls[0][0];
+    renderCircuit(() => newState);
     eq(app.mock.calls.length, 2);
     eq(app.mock.calls[1][0], newState);
     eq(app.mock.calls[1][1], void 0);
@@ -85,9 +85,9 @@ describe('Circuit', function() {
       eq(app.mock.calls.length, 1);
       oeq(app.mock.calls[0][0], mountState);
     };
-    bootstrap = (renderApp, ref, ctx) => {
+    bootstrap = (renderCircuit, ref, ctx) => {
       assert(ctx);
-      renderApp(updater, publisher, args);
+      renderCircuit(updater, publisher, args);
       return { app, transport, services };
     };
     C = <Circuit x={propsX}>{bootstrap}</Circuit>;
@@ -117,9 +117,9 @@ describe('Circuit', function() {
     let newState = { x: false };
     R.render(C);
     let instance = R.getMountedInstance();
-    let renderApp = bootstrap.mock.calls[0][0];
-    renderApp(() => mountState);
-    renderApp(() => newState, mock());
+    let renderCircuit = bootstrap.mock.calls[0][0];
+    renderCircuit(() => mountState);
+    renderCircuit(() => newState, mock());
     assert(instance.prevState);
     assert(instance.publishers);
     instance.componentWillUnmount();

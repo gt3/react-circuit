@@ -35,7 +35,7 @@ Result.propTypes = {
 }
 Result.defaultProps = { children: () => null }
 Result.contextTypes = {
-  renderApp: PropTypes.func,
+  renderCircuit: PropTypes.func,
   intake: PropTypes.object,
   outtake: PropTypes.object,
   services: PropTypes.object

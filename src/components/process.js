@@ -23,12 +23,12 @@ export default class Process extends Component {
 }
 
 Process.propTypes = {
-  renderApp: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
+  renderCircuit: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
   intake: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
   handlers: PropTypes.object
 }
 Process.contextTypes = {
-  renderApp: PropTypes.func,
+  renderCircuit: PropTypes.func,
   intake: PropTypes.object,
   outtake: PropTypes.object,
   services: PropTypes.object

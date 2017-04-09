@@ -17,7 +17,7 @@ import { eq, neq, oeq, oneq, mock } from './helpers';
 import { Process } from '../src';
 import Message from '../src/message';
 
-describe('RenderAppProcess', function() {
+describe('RenderCircuitProcess', function() {
   let R, C, CNoSubscribe;
   let inch, inch2, intake, h1, h2, h3, p1, p2, state, errState;
   let init = () => {
@@ -37,7 +37,7 @@ describe('RenderAppProcess', function() {
       incError = h2;
       incError$ = p2;
       dec = h3;
-      get renderApp() {
+      get renderCircuit() {
         return (fn, fnPub) => fn(fnPub);
       }
       get intake() {
@@ -46,7 +46,7 @@ describe('RenderAppProcess', function() {
     };
     C.contextTypes = {};
     CNoSubscribe = class extends Process {
-      get renderApp() {
+      get renderCircuit() {
         return true;
       }
       componentWillMount() {}
@@ -72,7 +72,7 @@ describe('RenderAppProcess', function() {
     eq(instance.shouldComponentUpdate.mock.calls.length, 1);
     eq(instance.render.mock.calls.length, 0);
   });
-  it('renderApp should be invoked with updater and publisher, handlers should be subscribed to incoming messages', function(done) {
+  it('renderCircuit should be invoked with updater and publisher, handlers should be subscribed to incoming messages', function(done) {
     R.render(<C />);
     go(function*() {
       yield put(inch, state);
@@ -101,29 +101,29 @@ describe('RenderAppProcess', function() {
       <Process
         handlers={{ inc: [h1, h2, p1, p2] }}
         intake={intake}
-        renderApp={(fn, fnPub) => fn(fnPub)}
+        renderCircuit={(fn, fnPub) => fn(fnPub)}
       />
     );
   });
-  it('intake should be read from context when prop.renderApp is bool', function(done) {
-    let renderApp = mock(null);
+  it('intake should be read from context when prop.renderCircuit is bool', function(done) {
+    let renderCircuit = mock(null);
     R.render(
       <Process
         intake={intake => intake || {}}
         handlers={{ inc: h1 }}
-        renderApp
+        renderCircuit
       />
     );
     let instance = R.getMountedInstance();
     instance.unsubscribe(); //unsubscribe
     instance.__handles = null; //remove handles
-    instance.context = { intake, renderApp }; //provide mock renderApp in context
+    instance.context = { intake, renderCircuit }; //provide mock renderCircuit in context
     instance.componentWillMount(); //calling mount should subscribe again
     go(function*() {
-      eq(renderApp.mock.calls.length, 0);
+      eq(renderCircuit.mock.calls.length, 0);
       yield put(inch, state);
       yield timeout(10);
-      eq(renderApp.mock.calls.length, 1);
+      eq(renderCircuit.mock.calls.length, 1);
       done();
     });
   });

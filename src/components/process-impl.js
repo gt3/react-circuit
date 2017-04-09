@@ -18,24 +18,24 @@ function wrapProcessHandler(args, handlers) {
   return [newHandler(next), err && newHandler(err)]
 }
 
-function wrapRenderProcessHandler(renderApp, args, handlers) {
+function wrapRenderProcessHandler(renderCircuit, args, handlers) {
   let [next, err, next$, err$] = handlers
   let newHandler = (updater, publisher) =>
-    msg => renderApp(updater, publisher, [msg, ...args])
+    msg => renderCircuit(updater, publisher, [msg, ...args])
   return [newHandler(next, next$), err && newHandler(err, err$)]
 }
 
-let getHandlerWrapper = (isRenderP, renderApp, args) =>
+let getHandlerWrapper = (isRenderP, renderCircuit, args) =>
   isRenderP
-    ? wrapRenderProcessHandler.bind(null, renderApp, args)
+    ? wrapRenderProcessHandler.bind(null, renderCircuit, args)
     : wrapProcessHandler.bind(null, args)
 
 export let makeRefs = instance => {
   let { props, context } = instance
   let find = firstHas(instance, props, context)
   let intake = find('intake'), handlers = find('handlers')
-  let renderApp = firstHas(instance, props)('renderApp'),
-    isRenderP = !!renderApp
+  let renderCircuit = firstHas(instance, props)('renderCircuit'),
+    isRenderP = !!renderCircuit
   if (isFn(intake)) intake = intake(context.intake)
   if (!handlers) {
     let formatters = getHandlerFormatters(isRenderP)
@@ -43,8 +43,8 @@ export let makeRefs = instance => {
     let mapper = handlerMapper(validator, formatters)
     handlers = deriveHandlers(intake, instance, mapper, validator)
   }
-  if (isRenderP && !isFn(renderApp)) renderApp = context.renderApp
-  let handlerWrapper = getHandlerWrapper(isRenderP, renderApp, [
+  if (isRenderP && !isFn(renderCircuit)) renderCircuit = context.renderCircuit
+  let handlerWrapper = getHandlerWrapper(isRenderP, renderCircuit, [
     props,
     context
   ])
