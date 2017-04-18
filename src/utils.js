@@ -20,7 +20,7 @@ export { isFn, isStr }
 
 /* functions */
 
-const pipe = (...fns) => v => fns.reduce((acc, fn) => fn ? fn(acc) : acc, v)
+const pipe = (...fns) => v => fns.reduce((acc, fn) => (fn ? fn(acc) : acc), v)
 
 const m2f = (mKey, fn) => fn && (arr => Array.prototype[mKey].call(arr, fn))
 
@@ -32,15 +32,13 @@ export { pipe, m2f, flattenToObj, pipeOverKeys, mapOverKeys }
 
 /* object handling */
 
-const has = (key, checkProto) =>
-  o =>
-    o &&
-    (hasOwn.call(o, key) ||
-      (checkProto && has(key, false)(validateProto(Object.getPrototypeOf(o)))))
-const firstHas = (...o) =>
-  key => {
-    const res = o.find(has(key, true))
-    return res && res[key]
-  }
+const has = (key, checkProto) => o =>
+  o &&
+  (hasOwn.call(o, key) ||
+    (checkProto && has(key, false)(validateProto(Object.getPrototypeOf(o)))))
+const firstHas = (...o) => key => {
+  const res = o.find(has(key, true))
+  return res && res[key]
+}
 
 export { has, firstHas }

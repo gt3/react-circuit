@@ -40,7 +40,7 @@ const loaders = { serial: serialLoader, parallel: parallelLoader }
 export const initializeAsyncSources = (
   loaderKey = 'serial',
   options = defaultOptions
-) =>
-  (fetch, success, error, ...triggers) =>
-    triggers.forEach(c =>
-      go(loaders[loaderKey], [fetch, success, error, c, options]))
+) => (fetch, success, error, ...triggers) =>
+  triggers.forEach(c =>
+    go(loaders[loaderKey], [fetch, success, error, c, options])
+  )

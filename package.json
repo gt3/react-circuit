@@ -7,8 +7,7 @@
   "scripts": {
     "test": "cross-env BABEL_ENV=test jest --useStderr",
     "cover": "cross-env BABEL_ENV=test jest --coverage",
-    "nosemi": "eslint --fix -c ./config/eslint/.eslintrc-nosemi.json --ignore-path .gitignore src/**",
-    "format": "prettier --single-quote --write \"{src,test}/**/*.js\" && npm run nosemi",
+    "format": "prettier --no-semi --single-quote --write \"{src,test}/**/*.js\"",
     "lint": "npm run format && eslint -c ./config/eslint/.eslintrc.json --ignore-path .gitignore src/**",
     "build": "rollup -c && rollup -c --environment DIST",
     "prepublish": "npm run build"
@@ -34,7 +33,7 @@
     "eslint": "^3.2.2",
     "jest": "^18.1.0",
     "js-csp": "^0.9.0",
-    "prettier": "^0.22.0",
+    "prettier": "^1.1.0",
     "react": "^15.4.2",
     "react-addons-test-utils": "^15.4.0",
     "react-dom": "^15.4.0",

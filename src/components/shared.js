@@ -11,7 +11,8 @@ import {
   m2f
 } from '../utils'
 
-const checkSubdErrMsg = 'Base class cannot be instatitated directly. Subclass to inherit behavior.'
+const checkSubdErrMsg =
+  'Base class cannot be instatitated directly. Subclass to inherit behavior.'
 let checkSubd = (base, instance, supress) => {
   let err = !base.prototype.isPrototypeOf(Object.getPrototypeOf(instance))
   if (!supress) invariant(!err, checkSubdErrMsg)
@@ -46,8 +47,8 @@ export { wrapState, unwrapState, shallowCompare }
 
 /* process and result handlers */
 
-let errorHandlerFormat = k => k ? `${k}Error` : ''
-let publisherFormat = k => k ? `${k}$` : ''
+let errorHandlerFormat = k => (k ? `${k}Error` : '')
+let publisherFormat = k => (k ? `${k}$` : '')
 let handlerFormatters = [
   x => x,
   errorHandlerFormat,
@@ -55,7 +56,7 @@ let handlerFormatters = [
   pipe(errorHandlerFormat, publisherFormat)
 ]
 let getHandlerFormatters = isRenderP =>
-  isRenderP ? handlerFormatters : handlerFormatters.slice(0, 2)
+  (isRenderP ? handlerFormatters : handlerFormatters.slice(0, 2))
 
 let deriveHandlers = (source, target, mapper, filter) => {
   invariant(!!source, 'Missing source - could not dervie handlers')
@@ -69,8 +70,8 @@ let deriveHandlers = (source, target, mapper, filter) => {
   )
 }
 
-let handlerMapper = (validator, formatters) =>
-  k => formatters.map(f => validator(f(k)))
+let handlerMapper = (validator, formatters) => k =>
+  formatters.map(f => validator(f(k)))
 
 let wrapHandlers = (handlers, wrapper) => {
   warning(!!Object.keys(handlers).length, 'Missing handlers.')

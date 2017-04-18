@@ -16,21 +16,20 @@ function noop() {}
 const chanConstructor = chan().constructor
 let isChan = ch => ch && ch.constructor === chanConstructor
 
-let delayOrNot = (fn, delay = -1) => delay >= 0 ? setTimeout(fn, delay) : fn()
+let delayOrNot = (fn, delay = -1) => (delay >= 0 ? setTimeout(fn, delay) : fn())
 let tryClose = (c, delay) =>
   c && (c.closed || !!delayOrNot(() => c.close(), delay))
 let tryCloseAllKeys = handles =>
   Object.keys(handles).forEach(k => tryClose(handles[k]))
 export let tryCloseAll = handles => handles.forEach(tryCloseAllKeys)
 
-export let putter = (c, { delay, close, closeDelay, asis } = {}) =>
-  msg => {
-    let closeAction = close && tryClose.bind(null, c, closeDelay)
-    let wrapped = !asis && Message.wrap(msg)
-    let action = putAsync.bind(null, c, wrapped || msg, closeAction)
-    delayOrNot(action, delay)
-    return msg
-  }
+export let putter = (c, { delay, close, closeDelay, asis } = {}) => msg => {
+  let closeAction = close && tryClose.bind(null, c, closeDelay)
+  let wrapped = !asis && Message.wrap(msg)
+  let action = putAsync.bind(null, c, wrapped || msg, closeAction)
+  delayOrNot(action, delay)
+  return msg
+}
 
 function* singleTaker(c) {
   let msg = poll(c)
@@ -93,12 +92,11 @@ function setupPolling(key, next, err) {
   return handle
 }
 
-let pollThenTap = (key, tap) =>
-  (next, err = next) => {
-    let handle = setupPolling(key, next, err)
-    tap(handle[key])
-    return handle
-  }
+let pollThenTap = (key, tap) => (next, err = next) => {
+  let handle = setupPolling(key, next, err)
+  tap(handle[key])
+  return handle
+}
 
 export let multTapper = src => {
   let multHandle = ops.mult(src)
@@ -107,7 +105,7 @@ export let multTapper = src => {
 
 const proxyKeySuffix = 'Proxy'
 let makeProxyKey = k =>
-  !k || k.endsWith(proxyKeySuffix) ? k : `${k}${proxyKeySuffix}`
+  (!k || k.endsWith(proxyKeySuffix) ? k : `${k}${proxyKeySuffix}`)
 
 export let multConnect = (key, outlets) => {
   let proxyKey = makeProxyKey(key)

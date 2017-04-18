@@ -9,7 +9,7 @@ import {
 
 let handlerValidator = target => {
   let find = firstHas(target)
-  return key => key !== 'actions' ? isFn(find(key)) : void 0
+  return key => (key !== 'actions' ? isFn(find(key)) : void 0)
 }
 
 function wrapProcessHandler(args, handlers) {
@@ -20,15 +20,15 @@ function wrapProcessHandler(args, handlers) {
 
 function wrapRenderProcessHandler(renderCircuit, args, handlers) {
   let [next, err, next$, err$] = handlers
-  let newHandler = (updater, publisher) =>
-    msg => renderCircuit(updater, publisher, [msg, ...args])
+  let newHandler = (updater, publisher) => msg =>
+    renderCircuit(updater, publisher, [msg, ...args])
   return [newHandler(next, next$), err && newHandler(err, err$)]
 }
 
 let getHandlerWrapper = (isRenderP, renderCircuit, args) =>
-  isRenderP
+  (isRenderP
     ? wrapRenderProcessHandler.bind(null, renderCircuit, args)
-    : wrapProcessHandler.bind(null, args)
+    : wrapProcessHandler.bind(null, args))
 
 export let makeRefs = instance => {
   let { props, context } = instance

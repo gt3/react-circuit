@@ -44,7 +44,8 @@ export default class Circuit extends Component {
   }
   publish() {
     this.publishers.forEach(([fn, args]) =>
-      fn.call(null, this.appState, ...args))
+      fn.call(null, this.appState, ...args)
+    )
     this.publishers = []
   }
   render() {
