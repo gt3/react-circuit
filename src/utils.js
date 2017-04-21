@@ -20,7 +20,12 @@ export { isFn, isStr }
 
 /* functions */
 
-const pipe = (...fns) => v => fns.reduce((acc, fn) => (fn ? fn(acc) : acc), v)
+function pipe (...fns) {
+  function invoke(v) {
+    return fns.reduce( (acc, fn) => fn ? fn.call(this, acc) : acc, v)
+  }
+  return invoke
+}
 
 const m2f = (mKey, fn) => fn && (arr => Array.prototype[mKey].call(arr, fn))
 
