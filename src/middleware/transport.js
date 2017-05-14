@@ -9,7 +9,12 @@ let createActions = channels =>
   flattenToObj(mapOverKeys(channels, k => ({ [k]: putter(channels[k]) })))
 
 let createSubscriptions = channels =>
-  flattenToObj(mapOverKeys(channels, k => ({ [k]: multConnect(k, channels) })))
+  flattenToObj(
+    mapOverKeys(channels, k => {
+      let mult = multConnect(k, channels)
+      return mult && { [k]: mult }
+    })
+  )
 
 let createTransport = ({ createOuttake = empty, createIntake = empty }) => {
   let outtake = createOuttake(), intake = createIntake(), actions, subscribe

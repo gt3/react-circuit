@@ -103,9 +103,8 @@ export let multTapper = src => {
   return (c = chan()) => ops.mult.tap(multHandle, c)
 }
 
-const proxyKeySuffix = 'Proxy'
-let makeProxyKey = k =>
-  (!k || k.endsWith(proxyKeySuffix) ? k : `${k}${proxyKeySuffix}`)
+const proxyKeySuffix = 'Proxy', proxyRx = new RegExp(proxyKeySuffix + '$')
+let makeProxyKey = k => (!k || proxyRx.test(k) ? k : `${k}${proxyKeySuffix}`)
 
 export let multConnect = (key, outlets) => {
   let proxyKey = makeProxyKey(key)

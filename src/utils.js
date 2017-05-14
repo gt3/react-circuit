@@ -20,9 +20,9 @@ export { isFn, isStr }
 
 /* functions */
 
-function pipe (...fns) {
+function pipe(...fns) {
   function invoke(v) {
-    return fns.reduce( (acc, fn) => fn ? fn.call(this, acc) : acc, v)
+    return fns.reduce((acc, fn) => (fn ? fn.call(this, acc) : acc), v)
   }
   return invoke
 }
