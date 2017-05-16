@@ -11,6 +11,7 @@ export default class Result extends Component {
     return unwrapState(this.state)
   }
   setResult(updater, args = [undefined, this.props, this.context], cb) {
+    this.initialized = true
     return this.setState(wrapState.bind(null, updater, args, cb))
   }
   componentWillMount() {
@@ -24,7 +25,8 @@ export default class Result extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
   render() {
-    return this.props.children.call(this, this.result)
+    let { initialized, result, props, context } = this
+    return initialized ? props.children(result, props, context) : null
   }
 }
 Result.propTypes = {
