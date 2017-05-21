@@ -113,7 +113,7 @@ describe('Circuit', function() {
     let instance = R.getMountedInstance()
     assert_refHandler(instance)
   })
-  it('should cleanup on unmount', function() {
+  it('should cleanup internal state on unmount', function() {
     let newState = { x: false }
     R.render(C)
     let instance = R.getMountedInstance()
@@ -125,5 +125,13 @@ describe('Circuit', function() {
     instance.componentWillUnmount()
     assert(!instance.prevState)
     assert(!instance.publishers)
+  })
+  it('should invoke supplied cleanup function on unmount', function() {
+    let cleanup = mock(), bootstrap = () => ({ app, cleanup })
+    R.render(<Circuit>{bootstrap}</Circuit>)
+    let instance = R.getMountedInstance()
+    eq(cleanup.mock.calls.length, 0)
+    instance.componentWillUnmount()
+    eq(cleanup.mock.calls.length, 1)
   })
 })

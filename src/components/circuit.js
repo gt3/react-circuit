@@ -12,14 +12,14 @@ export default class Circuit extends Component {
     let renderCircuit = this.renderCircuit.bind(this)
     let registerRefHandler = this.registerRefHandler.bind(this)
     let { props, context } = this
-    let { app, transport, services } = props.children.call(
+    let { app, transport, services, cleanup } = props.children.call(
       null,
       renderCircuit,
       registerRefHandler,
       context
     )
     let childContext = Object.assign({ renderCircuit, services }, transport)
-    return { app, transport, services, renderCircuit, childContext }
+    return { app, transport, services, renderCircuit, childContext, cleanup }
   }
   renderCircuit(updater, publisher, args = [], cb) {
     if (publisher) this.publishers.push([publisher, args])
@@ -35,6 +35,7 @@ export default class Circuit extends Component {
   }
   componentWillUnmount() {
     unsetProps(this, ['prevState', 'publishers'])
+    if (this.cleanup) this.cleanup.call(null)
   }
   componentDidUpdate() {
     this.prevState = this.state
