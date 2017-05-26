@@ -6,6 +6,7 @@ import {
   poll,
   putAsync,
   operations as ops,
+  Channel,
   NO_VALUE,
   CLOSED
 } from 'js-csp'
@@ -13,8 +14,6 @@ import Message from '../message'
 import { isFn, invokeFn } from '../utils'
 
 function noop() {}
-const chanConstructor = chan().constructor
-let isChan = ch => ch && ch.constructor === chanConstructor
 
 let delayOrNot = (fn, delay = -1) => (delay >= 0 ? setTimeout(fn, delay) : fn())
 let tryClose = (c, delay) =>
@@ -39,14 +38,14 @@ function* singleTaker(c) {
 
 function* taker(c, fn) {
   let msg = poll(c)
-  if (isChan(msg)) msg = poll(msg)
+  if (msg instanceof Channel) msg = poll(msg)
   fn(msg)
   while (true) {
     msg = yield take(c)
     if (msg === CLOSED) {
       break
     }
-    if (isChan(msg)) msg = yield go(singleTaker, [msg])
+    if (msg instanceof Channel) msg = yield go(singleTaker, [msg])
     fn(msg)
   }
 }
