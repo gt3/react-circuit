@@ -1,4 +1,5 @@
-import { Component, PropTypes } from 'react'
+import { Component } from 'react'
+import PropTypes from 'prop-types'
 import { has } from '../utils'
 import { checkSubd } from './shared'
 import { makeRefs, subscriber, unsubscriber } from './process-impl'
