@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "invariant": "^2.2.2",
-    "react-addons-shallow-compare": "^15.4.2",
+    "react-addons-shallow-compare": "^15.5.2",
     "warning": "^3.0.0"
   },
   "files": [
