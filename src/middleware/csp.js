@@ -23,10 +23,12 @@ let tryCloseAllKeys = handles =>
 export let tryCloseAll = handles => handles.forEach(tryCloseAllKeys)
 
 export let putter = (c, { delay, close, closeDelay, asis } = {}) => msg => {
-  let closeAction = close && tryClose.bind(null, c, closeDelay)
-  let wrapped = !asis && Message.wrap(msg)
-  let action = putAsync.bind(null, c, wrapped || msg, closeAction)
-  delayOrNot(action, delay)
+  if (!c.closed) {
+    let closeAction = close && tryClose.bind(null, c, closeDelay)
+    let wrapped = !asis && Message.wrap(msg)
+    let action = putAsync.bind(null, c, wrapped || msg, closeAction)
+    delayOrNot(action, delay)
+  }
   return msg
 }
 
