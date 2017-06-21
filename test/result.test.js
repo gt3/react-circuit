@@ -16,7 +16,6 @@ import {
 import { eq, neq, oeq, oneq, mock } from './helpers'
 import { Result, createSubscriptions } from '../src'
 import { subscriber, createRefs } from '../src/components/result-impl'
-import { multConnect } from '../src/middleware/csp'
 import Message from '../src/message'
 
 describe('Result', function() {

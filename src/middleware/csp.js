@@ -22,11 +22,12 @@ let tryCloseAllKeys = handles =>
   Object.keys(handles).forEach(k => tryClose(handles[k]))
 export let tryCloseAll = handles => handles.forEach(tryCloseAllKeys)
 
-export let putter = (c, { delay, close, closeDelay, asis } = {}) => msg => {
+export let putter = (c, { proxy, delay, close, closeDelay, asis } = {}) => msg => {
   if (!c.closed) {
     let closeAction = close && tryClose.bind(null, c, closeDelay)
     let wrapped = !asis && Message.wrap(msg)
-    let action = putAsync.bind(null, c, wrapped || msg, closeAction)
+    let targetc = (proxy && !proxy.closed) ? proxy : c
+    let action = putAsync.bind(null, targetc, wrapped || msg, closeAction)
     delayOrNot(action, delay)
   }
   return msg
@@ -104,25 +105,20 @@ export let multTapper = src => {
   return (c = chan()) => ops.mult.tap(multHandle, c)
 }
 
-const proxyKeySuffix = 'Proxy', proxyRx = new RegExp(proxyKeySuffix + '$')
-let makeProxyKey = k => (!k || proxyRx.test(k) ? k : `${k}${proxyKeySuffix}`)
-
 export let multConnect = (key, outlets) => {
-  let proxyKey = makeProxyKey(key)
-  let proxyChannel = outlets[proxyKey], outlet = outlets[key]
-  if (proxyChannel === outlet) return
+  let outlet = outlets[key], proxy = key.slice(-1) === '$' && chan(1), msg = NO_VALUE
   let multHandle = pollThenTap(key, multTapper(outlet))
-  if (!proxyChannel) return multHandle
-  return (next, err = next) => {
-    let msg = poll(proxyChannel)
-    let handle = multHandle(next, err)
-    let callNext = m => {
-      putAsync(proxyChannel, m)
-      return next(m)
+  if (!proxy) return multHandle
+  let wrapMultHandle = (next, err = next) => {
+    if(msg === NO_VALUE && !proxy.closed) {
+      msg = poll(proxy)
+      proxy.close()
     }
-    Message.next(callNext, err, msg)
+    let handle = multHandle(next, err)
+    Message.next(next, err, msg)
     return handle
   }
+  return Object.assign(wrapMultHandle, {proxy})
 }
 
 export let endPolling = (pollingHandlers, keys) => {

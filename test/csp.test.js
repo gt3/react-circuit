@@ -80,19 +80,17 @@ describe('extensions', function() {
     })
   })
   describe('#multConnect with proxy', function() {
-    it('should invoke next callback with message from proxy channel (follow naming convention)', function(
+    it('should invoke next callback with message from proxy channel (per naming convention)', function(
       done
     ) {
-      let takePool = { x: chan(), xProxy: chan(1) }
-      let i = 0,
-        msg = { x: 'xxx' },
-        fn = m => {
-          oeq(m, msg)
-          ++i
-        }
-      let subscribe = multConnect('x', takePool)
-      offer(takePool.xProxy, msg)
+      let takePool = { x$: chan() }
+      let i = 0, msg = { x: 'xxx' }, fn = m => { oeq(m.value, msg); ++i }
+      let subscribe = multConnect('x$', takePool)
+      assert(subscribe.proxy)
+      assert(!subscribe.proxy.closed)
+      offer(subscribe.proxy, msg)
       let h1 = subscribe(fn)
+      assert(subscribe.proxy.closed)
       let h2 = subscribe(fn)
       setTimeout(() => {
         oeq(i, 2)

@@ -1,25 +1,27 @@
 import { putter, multConnect } from './csp'
 import { flattenToObj, mapOverKeys, has } from '../utils'
 
-function empty() {
-  return {}
-}
+const empty = () => ({})
 
-let createActions = channels =>
-  flattenToObj(mapOverKeys(channels, k => ({ [k]: putter(channels[k]) })))
+let createActions = (chans, getOptions = empty) =>
+  flattenToObj(mapOverKeys(chans, k => ({ [k]: putter(chans[k], getOptions(k)) })))
 
-let createSubscriptions = channels =>
+let createOutActions = (chans, subscribe) => 
+  createActions(chans, k => ({ proxy: subscribe[k].proxy }))
+
+let createSubscriptions = chans =>
   flattenToObj(
-    mapOverKeys(channels, k => {
-      let mult = multConnect(k, channels)
+    mapOverKeys(chans, k => {
+      let mult = multConnect(k, chans)
       return mult && { [k]: mult }
     })
   )
 
 let createTransport = ({ createOuttake = empty, createIntake = empty }) => {
   let outtake = createOuttake(), intake = createIntake(), actions, subscribe
-  actions = !has('actions')(outtake) && createActions(outtake)
   subscribe = !has('subscribe')(outtake) && createSubscriptions(outtake)
+  //todo: warn if outtake.actions already there, overwrite outtake.actions anyway 
+  actions = !has('actions')(outtake) && createOutActions(outtake, subscribe)
   Object.assign(outtake, actions && { actions }, subscribe && { subscribe })
   actions = !has('actions')(intake) && createActions(intake)
   Object.assign(intake, actions && { actions })

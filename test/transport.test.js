@@ -32,9 +32,4 @@ describe('#createTransport', function() {
     eq(outtake.actions, o.actions)
     eq(outtake.subscribe, o.subscribe)
   })
-  it('should exclude proxy channels by naming convention from subscribe actions', function() {
-    let o = { x: chan(), xproxy: chan(), xProxy: chan(), xProxyProxy: chan() }
-    let { outtake } = createTransport({ createOuttake: () => o })
-    oeq(Object.keys(outtake.subscribe), ['x', 'xproxy'])
-  })
 })
