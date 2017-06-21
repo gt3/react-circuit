@@ -28,4 +28,4 @@ let createTransport = ({ createOuttake = empty, createIntake = empty }) => {
   return { intake, outtake }
 }
 
-export { createTransport as default, createActions, createSubscriptions }
+export { createTransport as default, createActions, createOutActions, createSubscriptions }

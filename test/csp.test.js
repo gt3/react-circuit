@@ -377,5 +377,21 @@ describe('extensions', function() {
       takeAsync(c, m => m && assert.fail('received msg on closed chan'))
       setTimeout(done)
     })
+    it('puts on a proxy channel until closed', function(done) {
+      let c = chan(), proxy = chan(), msg1 = { x: 1 }, msg2 = { x: 2 }
+      let p = putter(c, { proxy }), m
+      p(msg2)
+      go(function*(){
+        m = yield c
+        eq(m.value, msg1)
+        done()
+      })
+      go(function*(){
+        m = yield proxy
+        eq(m.value, msg2)
+        proxy.close()
+        p(msg1)
+      })
+    })
   })
 })
