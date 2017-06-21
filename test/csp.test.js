@@ -70,7 +70,7 @@ describe('extensions', function() {
     })
   })
   describe('#multConnect with proxy', function() {
-    it('should invoke next callback with message from proxy channel (per naming convention)', function(
+    it('should invoke handler with message from proxy channel (per naming convention)', function(
       done
     ) {
       let takePool = { x$: chan() }
@@ -88,9 +88,28 @@ describe('extensions', function() {
       assert(subscribe.proxy.closed)
       let h2 = subscribe(fn)
       setTimeout(() => {
-        oeq(i, 2)
+        eq(i, 2)
         done()
       })
+    })
+    it('should not invoke handler if proxy channel does not have a msg', function(done) {
+      let takePool = { x$: chan() }
+      let i = 0, msg = { x: 'xxx' }, fn = m => assert.fail('no msg was put on proxy')
+      let subscribe = multConnect('x$', takePool)
+      let h1 = subscribe(fn)
+      assert(subscribe.proxy.closed)
+      setTimeout(done)
+    })
+    it('should invoke handler when proxy chan does not have a msg but mult channel does', function(done) {
+      let takePool = { x$: chan(1) }
+      let i = 0, msg = { x: 'xxx' }, fn = m => { oeq(m.value, msg); i++; }
+      offer(takePool.x$, msg)
+      let subscribe = multConnect('x$', takePool)
+      let h1 = subscribe(fn)
+      setTimeout(() => {
+        eq(i, 1)
+        done()
+      }, 10)
     })
   })
   describe('#beginPolling', function() {
