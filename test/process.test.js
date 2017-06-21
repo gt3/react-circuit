@@ -1,18 +1,7 @@
 import React from 'react'
 import ReactTestUtils from 'react-dom/test-utils'
 import assert from 'assert'
-import {
-  go,
-  chan,
-  put,
-  putAsync,
-  takeAsync,
-  poll,
-  offer,
-  timeout,
-  CLOSED,
-  NO_VALUE
-} from 'js-csp'
+import { go, chan, put, putAsync, takeAsync, poll, offer, timeout, CLOSED, NO_VALUE } from 'js-csp'
 import { eq, neq, oeq, oneq, mock } from './helpers'
 import { Process } from '../src'
 import Message from '../src/message'
@@ -107,17 +96,9 @@ describe('RenderCircuitProcess', function() {
       />
     )
   })
-  it('intake should be read from context when prop.renderCircuit is bool', function(
-    done
-  ) {
+  it('intake should be read from context when prop.renderCircuit is bool', function(done) {
     let renderCircuit = mock(null)
-    R.render(
-      <Process
-        intake={intake => intake || {}}
-        handlers={{ inc: h1 }}
-        renderCircuit
-      />
-    )
+    R.render(<Process intake={intake => intake || {}} handlers={{ inc: h1 }} renderCircuit />)
     let instance = R.getMountedInstance()
     instance.unsubscribe() //unsubscribe
     instance.__handles = null //remove handles
@@ -218,9 +199,7 @@ describe('Process', function() {
       done()
     })
   })
-  it('handlers (passed as props) should be subscribed to incoming messages', function(
-    done
-  ) {
+  it('handlers (passed as props) should be subscribed to incoming messages', function(done) {
     R.render(<Process handlers={{ inc: [h1, h2] }} intake={intake} />)
     go(function*() {
       yield put(inch, state)
@@ -246,9 +225,7 @@ describe('Process', function() {
       done()
     })
   })
-  it('intake could be a function that gets context.intake as arg', function(
-    done
-  ) {
+  it('intake could be a function that gets context.intake as arg', function(done) {
     let createIntake = intakeFromContext => {
       if (intakeFromContext) {
         eq(intakeFromContext, intake)

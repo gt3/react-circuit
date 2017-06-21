@@ -16,17 +16,15 @@ import { isFn, invokeFn } from '../utils'
 function noop() {}
 
 let delayOrNot = (fn, delay = -1) => (delay >= 0 ? setTimeout(fn, delay) : fn())
-let tryClose = (c, delay) =>
-  c && (c.closed || !!delayOrNot(() => c.close(), delay))
-let tryCloseAllKeys = handles =>
-  Object.keys(handles).forEach(k => tryClose(handles[k]))
+let tryClose = (c, delay) => c && (c.closed || !!delayOrNot(() => c.close(), delay))
+let tryCloseAllKeys = handles => Object.keys(handles).forEach(k => tryClose(handles[k]))
 export let tryCloseAll = handles => handles.forEach(tryCloseAllKeys)
 
 export let putter = (c, { proxy, delay, close, closeDelay, asis } = {}) => msg => {
   if (!c.closed) {
     let closeAction = close && tryClose.bind(null, c, closeDelay)
     let wrapped = !asis && Message.wrap(msg)
-    let targetc = (proxy && !proxy.closed) ? proxy : c
+    let targetc = proxy && !proxy.closed ? proxy : c
     let action = putAsync.bind(null, targetc, wrapped || msg, closeAction)
     delayOrNot(action, delay)
   }
@@ -56,8 +54,7 @@ function* taker(c, fn) {
 function* multiTaker(chs, fn) {
   while (true) {
     let msg = []
-    for (let i = 0; i < chs.length; i++)
-      msg[i] = yield chs[i]
+    for (let i = 0; i < chs.length; i++) msg[i] = yield chs[i]
     if (msg.indexOf(CLOSED) > -1) break
     else fn(msg)
   }
@@ -78,9 +75,7 @@ export let beginPolling = (actions, errorHandler, channels) => {
       [next, err = errorHandler || next] = cbs
     let [poller, nextHandler] = selectPoller(c)
     if (poller) {
-      poller = nextHandler
-        ? poller(c, nextHandler.bind(null, next, err))
-        : poller(next, err)
+      poller = nextHandler ? poller(c, nextHandler.bind(null, next, err)) : poller(next, err)
       spawn(poller)
     }
     return { [key]: poller }
@@ -106,11 +101,13 @@ export let multTapper = src => {
 }
 
 export let multConnect = (key, outlets) => {
-  let outlet = outlets[key], proxy = key.slice(-1) === '$' && chan(1), msg = NO_VALUE
+  let outlet = outlets[key],
+    proxy = key.slice(-1) === '$' && chan(1),
+    msg = NO_VALUE
   let multHandle = pollThenTap(key, multTapper(outlet))
   if (!proxy) return multHandle
   let wrapMultHandle = (next, err = next) => {
-    if(msg === NO_VALUE && !proxy.closed) {
+    if (msg === NO_VALUE && !proxy.closed) {
       msg = poll(proxy)
       proxy.close()
     }
@@ -118,7 +115,7 @@ export let multConnect = (key, outlets) => {
     Message.next(next, err, msg)
     return handle
   }
-  return Object.assign(wrapMultHandle, {proxy})
+  return Object.assign(wrapMultHandle, { proxy })
 }
 
 export let endPolling = (pollingHandlers, keys) => {

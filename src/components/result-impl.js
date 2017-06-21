@@ -1,11 +1,6 @@
 import { tryCloseAll } from '../middleware/csp'
 import { mapOverKeys, firstHas, isFn } from '../utils'
-import {
-  getHandlerFormatters,
-  deriveHandlers,
-  handlerMapper,
-  wrapHandlers
-} from './shared'
+import { getHandlerFormatters, deriveHandlers, handlerMapper, wrapHandlers } from './shared'
 
 function id(s, msg) {
   return msg
@@ -34,10 +29,7 @@ export let makeRefs = instance => {
     let mapper = handlerMapper(validator, formatters)
     handlers = deriveHandlers(subscribe, instance, mapper)
   }
-  let handlerWrapper = wrapResultHandler.bind(null, instance.setResult, [
-    props,
-    context
-  ])
+  let handlerWrapper = wrapResultHandler.bind(null, instance.setResult, [props, context])
   handlers = wrapHandlers(handlers, handlerWrapper)
   return { subscribe, handlers }
 }

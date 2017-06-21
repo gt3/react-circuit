@@ -15,8 +15,7 @@ function fetchAsync(i, cb) {
 function fetchAsyncErr(i, cb) {
   return setTimeout(() => cb(_networkError))
 }
-let fetchAsyncWait = (wait = 0) => (i, cb) =>
-  (wait < 0 ? cb(++i) : setTimeout(() => cb(++i), wait))
+let fetchAsyncWait = (wait = 0) => (i, cb) => (wait < 0 ? cb(++i) : setTimeout(() => cb(++i), wait))
 let fetchAsyncWaitOnce = (wait = 0) => (i, cb) => {
   wait < 0 ? cb(++i) : setTimeout(() => cb(++i), wait)
   wait = -1
@@ -25,7 +24,8 @@ let fetchAsyncWaitOnce = (wait = 0) => (i, cb) => {
 describe('data-loader', function() {
   describe('#initializeAsyncSources #serial', function() {
     it('should accept synchronous callbacks', function(done) {
-      let c = chan(), i = 0
+      let c = chan(),
+        i = 0
       let success = m => {
         eq(m, i + 1)
         done()
@@ -34,10 +34,10 @@ describe('data-loader', function() {
       ias()(fetchSync, success, failure, c)
       putter(c, { close: true })(i)
     })
-    it('should control processing flow with backpressure support', function(
-      done
-    ) {
-      let c = chan(4), i = 1, j
+    it('should control processing flow with backpressure support', function(done) {
+      let c = chan(4),
+        i = 1,
+        j
       let success = m => {
         eq(m, ++i)
         if (i === 5) return done()
@@ -59,7 +59,8 @@ describe('data-loader', function() {
       putter(c, { close: true })(true)
     })
     it('should timeout, report error, yield to next request', function(done) {
-      let c = chan(2), failed
+      let c = chan(2),
+        failed
       let success = m => {
         assert.ok(failed)
         eq(m, 2 + 1)
@@ -69,17 +70,17 @@ describe('data-loader', function() {
         failed = true
         eq(m.value, 1)
       }
-      ias('serial', { abandonAfter: 100 })(
-        fetchAsyncWaitOnce(200),
-        success,
-        failure,
-        c
-      )
+      ias('serial', { abandonAfter: 100 })(fetchAsyncWaitOnce(200), success, failure, c)
       putter(c)(1)
       putter(c)(2)
     })
     it('should run load processes for each source channel', function(done) {
-      let c1 = chan(), c2 = chan(), c3 = chan(), c4 = chan(), i = 0, cnt = 0
+      let c1 = chan(),
+        c2 = chan(),
+        c3 = chan(),
+        c4 = chan(),
+        i = 0,
+        cnt = 0
       let success = m => {
         eq(m, ++i - cnt)
         if (++cnt === 4) done()
@@ -93,10 +94,10 @@ describe('data-loader', function() {
     })
   })
   describe('#initializeAsyncSources #parallel', function() {
-    it('should run load processes in parallel each source channel', function(
-      done
-    ) {
-      let c = chan(5), i = 1, j
+    it('should run load processes in parallel each source channel', function(done) {
+      let c = chan(5),
+        i = 1,
+        j
       let success = m => {
         eq(m, ++i)
         if (i === 100) return done()

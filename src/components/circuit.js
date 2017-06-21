@@ -27,8 +27,7 @@ export default class Circuit extends Component {
     return this.setState(wrapState.bind(null, updater, args), cb)
   }
   registerRefHandler(refHandler, ...args) {
-    return ref =>
-      this.refState = refHandler.call(null, ref, this.refState, ...args)
+    return ref => (this.refState = refHandler.call(null, ref, this.refState, ...args))
   }
   componentWillMount() {
     this.publishers = []
@@ -45,9 +44,7 @@ export default class Circuit extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
   publish() {
-    this.publishers.forEach(([fn, args]) =>
-      fn.call(null, this.appState, ...args)
-    )
+    this.publishers.forEach(([fn, args]) => fn.call(null, this.appState, ...args))
     this.publishers = []
   }
   render() {

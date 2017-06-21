@@ -32,16 +32,15 @@ class Message extends MessageDetails {
   }
   static next(cb, errorCb, msg) {
     if (msg === NO_VALUE || msg === CLOSED) return
-    let wrapped = Message.wrap(msg), useWrapped = cb === errorCb && wrapped
+    let wrapped = Message.wrap(msg),
+      useWrapped = cb === errorCb && wrapped
     return wrapped.passed ? cb(useWrapped || wrapped.value) : errorCb(wrapped)
   }
   static nextParseArray(cb, errorCb, msgs) {
     if (!Array.isArray(msgs)) return Message.next(cb, errorCb, msgs)
     if (msgs.indexOf(CLOSED) > -1) return
     if (!msgs.find(m => m !== NO_VALUE)) return
-    let wrapped = msgs.find(isErroneous)
-      ? Message.fail(msgs)
-      : Message.pass(msgs)
+    let wrapped = msgs.find(isErroneous) ? Message.fail(msgs) : Message.pass(msgs)
     return Message.next(cb, errorCb, wrapped)
   }
 }

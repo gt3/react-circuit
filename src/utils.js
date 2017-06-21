@@ -39,8 +39,7 @@ export { pipe, m2f, flattenToObj, pipeOverKeys, mapOverKeys }
 
 const has = (key, checkProto) => o =>
   o &&
-  (hasOwn.call(o, key) ||
-    (checkProto && has(key, false)(validateProto(Object.getPrototypeOf(o)))))
+  (hasOwn.call(o, key) || (checkProto && has(key, false)(validateProto(Object.getPrototypeOf(o)))))
 const firstHas = (...o) => key => {
   const res = o.find(has(key, true))
   return res && res[key]

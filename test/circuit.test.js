@@ -1,16 +1,7 @@
 import React from 'react'
 import ReactTestUtils from 'react-dom/test-utils'
 import assert from 'assert'
-import {
-  chan,
-  go,
-  putAsync,
-  takeAsync,
-  poll,
-  offer,
-  CLOSED,
-  NO_VALUE
-} from 'js-csp'
+import { chan, go, putAsync, takeAsync, poll, offer, CLOSED, NO_VALUE } from 'js-csp'
 import { eq, neq, oeq, oneq, mock } from './helpers'
 import { Circuit } from '../src'
 
@@ -74,8 +65,10 @@ describe('Circuit', function() {
     eq(app.mock.calls[2][1], newState)
   })
   it('setting app state during mount should invoke publisher (in the same render)', function() {
-    let propsX = { dummy: true }, args = [{}]
-    let updater = () => mountState, publisher = mock()
+    let propsX = { dummy: true },
+      args = [{}]
+    let updater = () => mountState,
+      publisher = mock()
     let assert_publisher = mountedInstance => {
       eq(publisher.mock.calls.length, 1)
       oeq(publisher.mock.calls[0][0], mountState)
@@ -127,7 +120,8 @@ describe('Circuit', function() {
     assert(!instance.publishers)
   })
   it('should invoke supplied cleanup function on unmount', function() {
-    let cleanup = mock(), bootstrap = () => ({ app, cleanup })
+    let cleanup = mock(),
+      bootstrap = () => ({ app, cleanup })
     R.render(<Circuit>{bootstrap}</Circuit>)
     let instance = R.getMountedInstance()
     eq(cleanup.mock.calls.length, 0)

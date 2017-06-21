@@ -15,7 +15,8 @@ function* serialLoader(fetch, success, error, source, { abandonTimeout }) {
   let resume = done => msg => done() && processResponse(msg)
   let cleanup = c => () => !c.closed && (c.close(), true)
   while (((msg = yield take(block)), msg !== CLOSED)) {
-    let awaitFetch = chan(), done = cleanup(awaitFetch)
+    let awaitFetch = chan(),
+      done = cleanup(awaitFetch)
     fetch(msg.value, resume(done))
     const result = yield alts([awaitFetch, startTimer()])
     if (result.channel !== awaitFetch) {
@@ -37,10 +38,9 @@ function* parallelLoader(fetch, success, error, source, options) {
 
 const loaders = { serial: serialLoader, parallel: parallelLoader }
 
-export const initializeAsyncSources = (
-  loaderKey = 'serial',
-  options = defaultOptions
-) => (fetch, success, error, ...triggers) =>
-  triggers.forEach(c =>
-    go(loaders[loaderKey], [fetch, success, error, c, options])
-  )
+export const initializeAsyncSources = (loaderKey = 'serial', options = defaultOptions) => (
+  fetch,
+  success,
+  error,
+  ...triggers
+) => triggers.forEach(c => go(loaders[loaderKey], [fetch, success, error, c, options]))

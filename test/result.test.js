@@ -1,18 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import ReactTestUtils from 'react-dom/test-utils'
 import assert from 'assert'
-import {
-  go,
-  chan,
-  put,
-  putAsync,
-  takeAsync,
-  poll,
-  offer,
-  timeout,
-  CLOSED,
-  NO_VALUE
-} from 'js-csp'
+import { go, chan, put, putAsync, takeAsync, poll, offer, timeout, CLOSED, NO_VALUE } from 'js-csp'
 import { eq, neq, oeq, oneq, mock } from './helpers'
 import { Result, createSubscriptions } from '../src'
 import { subscriber, createRefs } from '../src/components/result-impl'
@@ -41,9 +30,7 @@ describe('Result', function() {
   })
   it('child should be rendered with value returned from initialResult function prop', function() {
     let init = mock(state)
-    R.render(
-      <Result initialResult={init} children={child} subscribe={subscribe} />
-    )
+    R.render(<Result initialResult={init} children={child} subscribe={subscribe} />)
     eq(init.mock.calls.length, 1)
     eq(init.mock.calls[0][2].initialResult, init)
     eq(child.mock.calls.length, 1)
@@ -56,7 +43,9 @@ describe('Result', function() {
   })
   it('subscriber should register handlers with subscribe', function() {
     let subscribe = { x1: mock(), x2: mock() }
-    let x1h = mock(), x1herr = mock(), x2h = mock()
+    let x1h = mock(),
+      x1herr = mock(),
+      x2h = mock()
     let handlers = { x1: [x1h, x1herr], x2: [x2h] }
     subscriber({ subscribe, handlers })
     eq(subscribe.x1.mock.calls[0][0], x1h)
@@ -64,7 +53,8 @@ describe('Result', function() {
     eq(subscribe.x2.mock.calls[0][0], x2h)
   })
   it('default handler should update component state', function(done) {
-    let c = outtake.res, err = new Error('xxx')
+    let c = outtake.res,
+      err = new Error('xxx')
     putAsync(c, state)
     go(function*() {
       eq(child.mock.calls.length, 0)
@@ -105,9 +95,7 @@ describe('Result', function() {
     })
     R.render(C)
   })
-  it('custom handler should be called with state, msg, props, context', function(
-    done
-  ) {
+  it('custom handler should be called with state, msg, props, context', function(done) {
     putAsync(outtake.res1, state)
     let res1 = (s, m, props, ctx) => {
       oeq(m.value, state)
@@ -117,18 +105,9 @@ describe('Result', function() {
       return m.t
     }
     let res = () => false
-    R.render(
-      <Result
-        handlers={{ res, res1 }}
-        subscribe={subscribe}
-        x={1}
-        children={child}
-      />
-    )
+    R.render(<Result handlers={{ res, res1 }} subscribe={subscribe} x={1} children={child} />)
   })
-  it('subscribe could be a function that gets context.subscribe as arg', function(
-    done
-  ) {
+  it('subscribe could be a function that gets context.subscribe as arg', function(done) {
     let subscribeFn = outtake => {
       if (outtake) {
         eq(outtake.subscribe, subscribe)
