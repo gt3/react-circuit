@@ -29,11 +29,11 @@ describe('Circuit', function() {
       let renderCircuit = bootstrap.mock.calls[0][0]
       renderCircuit(() => mountState)
       eq(app.mock.calls.length, 2)
-      eq(app.mock.calls[1][0], mountState)
+      eq(app.mock.calls[1][0].appState, mountState)
       renderCircuit(() => newState)
       eq(app.mock.calls.length, 3)
-      eq(app.mock.calls[2][0], newState)
-      eq(app.mock.calls[2][1], mountState)
+      eq(app.mock.calls[2][0].appState, newState)
+      eq(app.mock.calls[2][0].prevAppState, mountState)
     }
     R.render(C)
     let instance = R.getMountedInstance()
@@ -57,12 +57,12 @@ describe('Circuit', function() {
     let renderCircuit = bootstrap.mock.calls[0][0]
     renderCircuit(() => newState)
     eq(app.mock.calls.length, 2)
-    eq(app.mock.calls[1][0], newState)
-    eq(app.mock.calls[1][1], void 0)
+    eq(app.mock.calls[1][0].appState, newState)
+    eq(app.mock.calls[1][0].prevAppState, void 0)
     instance.forceUpdate()
     eq(app.mock.calls.length, 3)
-    eq(app.mock.calls[2][0], newState)
-    eq(app.mock.calls[2][1], newState)
+    eq(app.mock.calls[2][0].appState, newState)
+    eq(app.mock.calls[2][0].prevAppState, newState)
   })
   it('setting app state during mount should invoke publisher (in the same render)', function() {
     let propsX = { dummy: true },
@@ -76,7 +76,7 @@ describe('Circuit', function() {
     }
     let assert_child = mountedInstance => {
       eq(app.mock.calls.length, 1)
-      oeq(app.mock.calls[0][0], mountState)
+      oeq(app.mock.calls[0][0].appState, mountState)
     }
     bootstrap = (renderCircuit, ref, ctx) => {
       assert(ctx)
