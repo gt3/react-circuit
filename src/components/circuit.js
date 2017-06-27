@@ -2,6 +2,10 @@ import { Component, Children, isValidElement, cloneElement } from 'react'
 import PropTypes from 'prop-types'
 import { wrapState, unwrapState, shallowCompare, unsetProps } from './shared'
 
+function getRenderApp(app) {
+  return isValidElement(app) ? cloneElement.bind(null, Children.only(app)) : app.bind(null)
+}
+
 export default class Circuit extends Component {
   get appState() {
     return unwrapState(this.state)
@@ -14,10 +18,11 @@ export default class Circuit extends Component {
     let registerRefHandler = this.registerRefHandler.bind(this)
     let { props, context } = this, child = props.children
     let { app, transport, services, cleanup } = isValidElement(child)
-      ? { app: Children.only(child) }
+      ? { app: child }
       : child.call(null, renderCircuit, registerRefHandler, context)
+    let renderApp = getRenderApp(app)
     let childContext = Object.assign({ renderCircuit, services }, transport)
-    return { app, transport, services, renderCircuit, childContext, cleanup }
+    return { renderApp, transport, services, renderCircuit, childContext, cleanup }
   }
   renderCircuit(updater, publisher, args = [], cb) {
     if (publisher) this.publishers.push([publisher, args])
@@ -45,10 +50,8 @@ export default class Circuit extends Component {
     this.publishers = []
   }
   render() {
-    let { appState, prevAppState } = this
-    let render = isValidElement(this.app) ? cloneElement.bind(null, this.app) : this.app.bind(null)
     this.publish()
-    return render({appState, prevAppState})
+    return this.renderApp({appState: this.appState, prevAppState: this.prevAppState})
   }
   getChildContext() {
     return this.childContext
