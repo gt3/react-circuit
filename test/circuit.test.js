@@ -122,4 +122,13 @@ describe('Circuit', function() {
     instance.componentWillUnmount()
     eq(cleanup.mock.calls.length, 1)
   })
+  it('should render child _element_', function() {
+    let App = props => <div>{props.x}</div>
+    C = <Circuit><App x={42} /></Circuit>
+    let res = R.render(C)
+    eq(res.type, App)
+    eq(res.props.x, 42)
+    assert('appState' in res.props)
+    assert('prevAppState' in res.props)
+  })
 })
