@@ -29,7 +29,7 @@ export default class Circuit extends Component {
     return this.setState(wrapState.bind(null, updater, args), cb)
   }
   registerRefHandler(refHandler, ...args) {
-    return ref => (this.refState = refHandler.call(null, ref, this.refState, ...args))
+    return ref => this.refState = refHandler.call(null, ref, this.refState, ...args)
   }
   componentWillMount() {
     this.publishers = []
@@ -51,13 +51,15 @@ export default class Circuit extends Component {
   }
   render() {
     this.publish()
-    return this.renderApp({appState: this.appState, prevAppState: this.prevAppState})
+    return this.renderApp({ appState: this.appState, prevAppState: this.prevAppState })
   }
   getChildContext() {
     return this.childContext
   }
 }
-Circuit.propTypes = { children: PropTypes.func.isRequired }
+Circuit.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
+}
 Circuit.childContextTypes = {
   renderCircuit: PropTypes.func,
   intake: PropTypes.object,

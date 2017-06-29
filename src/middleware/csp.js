@@ -54,7 +54,8 @@ function* taker(c, fn) {
 function* multiTaker(chs, fn) {
   while (true) {
     let msg = []
-    for (let i = 0; i < chs.length; i++) msg[i] = yield chs[i]
+    for (let i = 0; i < chs.length; i++)
+      msg[i] = yield chs[i]
     if (msg.indexOf(CLOSED) > -1) break
     else fn(msg)
   }
@@ -70,9 +71,7 @@ let selectPoller = c => {
 
 export let beginPolling = (actions, errorHandler, channels) => {
   let polling = Object.keys(actions).map(key => {
-    let c = channels[key],
-      cbs = [].concat(actions[key]),
-      [next, err = errorHandler || next] = cbs
+    let c = channels[key], cbs = [].concat(actions[key]), [next, err = errorHandler || next] = cbs
     let [poller, nextHandler] = selectPoller(c)
     if (poller) {
       poller = nextHandler ? poller(c, nextHandler.bind(null, next, err)) : poller(next, err)
@@ -101,9 +100,7 @@ export let multTapper = src => {
 }
 
 export let multConnect = (key, outlets) => {
-  let outlet = outlets[key],
-    proxy = key.slice(-1) === '$' && chan(1),
-    msg = NO_VALUE
+  let outlet = outlets[key], proxy = key.slice(-1) === '$' && chan(1), msg = NO_VALUE
   let multHandle = pollThenTap(key, multTapper(outlet))
   if (!proxy) return multHandle
   let wrapMultHandle = (next, err = next) => {

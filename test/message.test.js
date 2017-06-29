@@ -18,8 +18,7 @@ describe('Message', function() {
       eq(new Message(null, x).value, x)
     })
     it('#fail', function() {
-      let msg = 'xxx',
-        err = new Error(msg)
+      let msg = 'xxx', err = new Error(msg)
       assert(!Message.fail().passed)
       assert(!Message.fail(msg).passed)
       eq(Message.fail(msg).errorMessage, msg)
@@ -28,8 +27,7 @@ describe('Message', function() {
   })
   describe('#wrap should wrap and identify provided value based on its type', function() {
     it('wrap pass/fail', function() {
-      let msg = 'xxx',
-        err = new Error(msg)
+      let msg = 'xxx', err = new Error(msg)
       assert(!Message.wrap().passed)
       assert(Message.wrap(true).passed)
       eq(Message.wrap(true).value, true)
@@ -43,21 +41,18 @@ describe('Message', function() {
       assert(!Message.wrap(NaN).passed)
     })
     it('wrap exactly once', function() {
-      let m = Message.pass(),
-        merr = Message.fail()
+      let m = Message.pass(), merr = Message.fail()
       oeq(Message.wrap(m), m)
       oeq(Message.wrap(merr), merr)
     })
   })
   describe('#next should process callback based on message type', function() {
     let getSuccessNext = done => {
-      let success = m => done(),
-        err = assert.ifError
+      let success = m => done(), err = assert.ifError
       return Message.next.bind(Message, success, err)
     }
     let getFailureNext = done => {
-      let success = assert.ifError,
-        err = m => done()
+      let success = assert.ifError, err = m => done()
       return Message.next.bind(Message, success, err)
     }
     let getNoop = done => {
@@ -87,13 +82,11 @@ describe('Message', function() {
   })
   describe('#nextParseArray should process callback based on type of array elements', function() {
     let getSuccessNext = done => {
-      let success = m => done(),
-        err = assert.ifError
+      let success = m => done(), err = assert.ifError
       return Message.nextParseArray.bind(Message, success, err)
     }
     let getFailureNext = done => {
-      let success = assert.ifError,
-        err = m => done()
+      let success = assert.ifError, err = m => done()
       return Message.nextParseArray.bind(Message, success, err)
     }
     let getNoop = () => {

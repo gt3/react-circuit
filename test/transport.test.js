@@ -4,10 +4,8 @@ import { eq, neq, oeq, oneq, mock } from './helpers'
 import { createTransport } from '../src'
 
 describe('#createTransport', function() {
-  let outtake = { t1: chan(), x: chan() },
-    intake = { p1: chan(), x: chan() }
-  let oKeys = Object.keys(outtake),
-    iKeys = Object.keys(intake)
+  let outtake = { t1: chan(), x: chan() }, intake = { p1: chan(), x: chan() }
+  let oKeys = Object.keys(outtake), iKeys = Object.keys(intake)
   let createOuttake, createIntake
   beforeEach(function() {
     createOuttake = mock(outtake)
@@ -25,8 +23,7 @@ describe('#createTransport', function() {
     oeq(Object.keys(outtake.subscribe), oKeys)
   })
   it('should not overwrite custom actions, subscribe', function() {
-    let i = { actions: {} },
-      o = { actions: {}, subscribe: {} }
+    let i = { actions: {} }, o = { actions: {}, subscribe: {} }
     let { intake, outtake } = createTransport({
       createIntake: () => i,
       createOuttake: () => o

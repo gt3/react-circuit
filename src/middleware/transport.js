@@ -18,10 +18,7 @@ let createSubscriptions = chans =>
   )
 
 let createTransport = ({ createOuttake = empty, createIntake = empty }) => {
-  let outtake = createOuttake(),
-    intake = createIntake(),
-    actions,
-    subscribe
+  let outtake = createOuttake(), intake = createIntake(), actions, subscribe
   subscribe = !has('subscribe')(outtake) && createSubscriptions(outtake)
   //todo: warn if outtake.actions already there, overwrite outtake.actions anyway
   actions = !has('actions')(outtake) && createOutActions(outtake, subscribe)

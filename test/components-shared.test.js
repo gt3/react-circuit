@@ -19,9 +19,7 @@ describe('components/shared', function() {
   })
   //todo: split into seperate tests
   it('wrapState', function() {
-    let o = { x: 1 },
-      o2 = { x: 2 },
-      s = { value: o }
+    let o = { x: 1 }, o2 = { x: 2 }, s = { value: o }
     let args = [o2]
 
     let updater = {}
@@ -54,9 +52,7 @@ describe('components/shared', function() {
     oeq(u.unsetProps({ x: 1, y: 2 }), { x: 1, y: 2 })
   })
   it('shallowCompare', function() {
-    let props = { x: 1 },
-      state = u.wrapState({ s: 1 }),
-      o = { props, state }
+    let props = { x: 1 }, state = u.wrapState({ s: 1 }), o = { props, state }
     eq(u.shallowCompare(o, props, state), false)
     eq(u.shallowCompare(o, { x: 1 }, state), false)
     eq(u.shallowCompare(o, props, { s: 1 }), true)
@@ -77,14 +73,9 @@ describe('components/shared', function() {
     eq(u.publisherFormat(null), '')
   })
   it('deriveHandlers', function() {
-    let v1 = {},
-      v2 = {},
-      v3 = {},
-      v4 = {}
-    let s = { v1, v2, v3 },
-      t = { v2, v3, v4 }
-    let m = x => t[x],
-      f = x => x !== 'v3'
+    let v1 = {}, v2 = {}, v3 = {}, v4 = {}
+    let s = { v1, v2, v3 }, t = { v2, v3, v4 }
+    let m = x => t[x], f = x => x !== 'v3'
     oeq(u.deriveHandlers(s, t, m), { v2, v3 })
     oeq(u.deriveHandlers(s, t, m, f), { v2 })
   })
