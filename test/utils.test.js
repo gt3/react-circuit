@@ -5,33 +5,43 @@ import * as u from '../src/utils'
 
 describe('utils', function() {
   it('pipe', function() {
-    let inc = i => i + 1, sq = i => i * i
+    let inc = i => i + 1,
+      sq = i => i * i
     eq(u.pipe(null, inc, sq)(1), 4)
     eq(u.pipe(sq, null, inc)(1), 2)
     eq(u.pipe(null)(1), 1)
   })
   it('m2f', function() {
-    let inc = i => i + 1, ev = i => i % 2
+    let inc = i => i + 1,
+      ev = i => i % 2
     eq(u.m2f('map', null), null)
     oeq(u.m2f('map', inc)([1, 2]), [1, 2].map(inc))
     oeq(u.m2f('filter', ev)([2, 3, 4]), [2, 3, 4].filter(ev))
   })
   it('flattenToObj', function() {
-    let a = [], a2 = [{ x: 1 }, { y: 2 }], a3 = [{ x: { y: 1 } }]
-    let o = {}, o2 = { x: 1, y: 2 }, o3 = { x: { y: 1 } }
+    let a = [],
+      a2 = [{ x: 1 }, { y: 2 }],
+      a3 = [{ x: { y: 1 } }]
+    let o = {},
+      o2 = { x: 1, y: 2 },
+      o3 = { x: { y: 1 } }
     oeq(u.flattenToObj(a), o)
     oeq(u.flattenToObj(a2), o2)
     oeq(u.flattenToObj(a3), o3)
   })
   it('pipeOverKeys', function() {
-    let a = [1, 2, 3], o = { 0: 1, 1: 2, 2: 3 }
-    let join = x => x.join('-'), split = x => x.split('-')
+    let a = [1, 2, 3],
+      o = { 0: 1, 1: 2, 2: 3 }
+    let join = x => x.join('-'),
+      split = x => x.split('-')
     let r = '0-1-2'
     eq(u.pipeOverKeys(a, join), r)
     eq(u.pipeOverKeys(a, join, split, join), r)
   })
   it('mapOverKeys', function() {
-    let a = [1, 2, 3], o = { 0: 1, 1: 2, 2: 3 }, fn = x => x * 2
+    let a = [1, 2, 3],
+      o = { 0: 1, 1: 2, 2: 3 },
+      fn = x => x * 2
     let r = [0, 2, 4]
     oeq(u.mapOverKeys(a, fn), r)
     oeq(u.mapOverKeys(o, fn), r)

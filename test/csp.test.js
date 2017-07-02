@@ -7,7 +7,10 @@ import Message from '../src/message'
 describe('extensions', function() {
   describe('#tryCloseAll', function() {
     it('should close all channels in the given channel map object', function(done) {
-      let c1 = chan(1), c2 = chan(1), co = { c1, c2 }, i = 0
+      let c1 = chan(1),
+        c2 = chan(1),
+        co = { c1, c2 },
+        i = 0
       putter(c1)(++i)
       putter(c2)(++i)
       takeAsync(c2, v => {
@@ -19,7 +22,10 @@ describe('extensions', function() {
       })
     })
     it('should close channels identified by key', function(done) {
-      let c1 = chan(1), c2 = chan(1), co = { c1, c2 }, i = 0
+      let c1 = chan(1),
+        c2 = chan(1),
+        co = { c1, c2 },
+        i = 0
       putter(c1)(++i)
       putter(c2)(++i)
       takeAsync(c2, v => {
@@ -33,7 +39,8 @@ describe('extensions', function() {
   })
   describe('#multConnect', function() {
     it('should attach multiple receivers to one channel', function(done) {
-      let takePool = { x: chan() }, subscribe = multConnect('x', takePool)
+      let takePool = { x: chan() },
+        subscribe = multConnect('x', takePool)
       let fn = mock()
       putAsync(takePool.x, true)
       let h1 = subscribe(fn)
@@ -47,9 +54,11 @@ describe('extensions', function() {
       })
     })
     it('should invoke error handler when mult receives error message', function(done) {
-      let takePool = { x: chan() }, subscribe = multConnect('x', takePool)
+      let takePool = { x: chan() },
+        subscribe = multConnect('x', takePool)
       let err = new Error('call done on error cb')
-      let fn = mock(), fnErr = mock()
+      let fn = mock(),
+        fnErr = mock()
       putAsync(takePool.x, err)
       let h1 = subscribe(fn, fnErr)
       go(function*() {
@@ -85,7 +94,9 @@ describe('extensions', function() {
     })
     it('should not invoke handler if proxy channel does not have a msg', function(done) {
       let takePool = { x$: chan() }
-      let i = 0, msg = { x: 'xxx' }, fn = m => assert.fail('no msg was put on proxy')
+      let i = 0,
+        msg = { x: 'xxx' },
+        fn = m => assert.fail('no msg was put on proxy')
       let subscribe = multConnect('x$', takePool)
       let h1 = subscribe(fn)
       assert(subscribe.proxy.closed)
@@ -112,7 +123,10 @@ describe('extensions', function() {
   })
   describe('#beginPolling', function() {
     it('should poll and call handler synchronously when data is available', function(done) {
-      let c = chan(1), co = { x: c }, handler = { x: () => ++i }, i = 0
+      let c = chan(1),
+        co = { x: c },
+        handler = { x: () => ++i },
+        i = 0
       putAsync(c, true, () => {
         beginPolling(handler, null, co)
         assert(i)
@@ -120,7 +134,10 @@ describe('extensions', function() {
       })
     })
     it('keep calling handler as data arrives', function(done) {
-      let c = chan(), co = { x: c }, handler = { x: () => ++i }, i = 0
+      let c = chan(),
+        co = { x: c },
+        handler = { x: () => ++i },
+        i = 0
       beginPolling(handler, null, co)
       putAsync(c, true, () => eq(i, 0))
       putAsync(c, true, () => eq(i, 1))
@@ -130,8 +147,11 @@ describe('extensions', function() {
       })
     })
     it('multiple handlers for multiple channels', function(done) {
-      let co = { x: chan(), y: chan(), z: chan() }, c = chan()
-      let i = 0, fn = () => ++i, h = { x: fn, y: fn, z: fn }
+      let co = { x: chan(), y: chan(), z: chan() },
+        c = chan()
+      let i = 0,
+        fn = () => ++i,
+        h = { x: fn, y: fn, z: fn }
       putAsync(co.x, true)
       putAsync(co.y, true)
       putAsync(co.z, true, () => putAsync(c, true))
@@ -142,22 +162,31 @@ describe('extensions', function() {
       })
     })
     it('#1 should call error handler when error message is returned from channel', function(done) {
-      let fn = () => ++i, doneOnErr = () => done()
-      let c = chan(1), co = { x: c }, handler = { x: [fn, doneOnErr] }, i = 0
+      let fn = () => ++i,
+        doneOnErr = () => done()
+      let c = chan(1),
+        co = { x: c },
+        handler = { x: [fn, doneOnErr] },
+        i = 0
       putAsync(c, new Error('calls done'), () => {
         beginPolling(handler, null, co)
       })
     })
     it('#2 should call error handler when error message is returned from channel', function(done) {
       let fn = () => ++i
-      let c = chan(1), co = { x: c }, handler = { x: fn }, i = 0
+      let c = chan(1),
+        co = { x: c },
+        handler = { x: fn },
+        i = 0
       putAsync(c, Message.fail('calls done'), () => {
         beginPolling(handler, () => done(), co)
       })
     })
     it('should return handles to the generator objects created for corresponding actions', function() {
       let co = { x: chan(), y: chan(), z: chan() }
-      let i = 0, fn = () => ++i, h = { x: fn, y: fn, z: fn }
+      let i = 0,
+        fn = () => ++i,
+        h = { x: fn, y: fn, z: fn }
       let handles = beginPolling(h, null, co)
       assert(handles.x)
       assert(handles.y)
@@ -165,7 +194,9 @@ describe('extensions', function() {
       oeq(Object.keys(handles), Object.keys(h))
     })
     it('should invoke same handler for multiple channels (array)', function(done) {
-      let c1 = chan(), c2 = chan(), co = { x: [c1, c2] }
+      let c1 = chan(),
+        c2 = chan(),
+        co = { x: [c1, c2] }
       let fn = mock()
       let h = { x: fn }
       beginPolling(h, null, co)
@@ -184,7 +215,10 @@ describe('extensions', function() {
       })
     })
     it('should read from channel producing channel', function(done) {
-      let c1 = chan(1), c2 = chan(1), c3 = chan(1), co = { x: c1 }
+      let c1 = chan(1),
+        c2 = chan(1),
+        c3 = chan(1),
+        co = { x: c1 }
       let fn = mock()
       let h = { x: fn }
       putAsync(c1, c2)
@@ -202,7 +236,9 @@ describe('extensions', function() {
       })
     })
     it('should read from multiple channels sequentially', function(done) {
-      let c1 = chan(), c2 = chan(), co = { x: [c1, c2] }
+      let c1 = chan(),
+        c2 = chan(),
+        co = { x: [c1, c2] }
       let fn = mock()
       let h = { x: fn }
       putAsync(c2, 2)
@@ -218,12 +254,15 @@ describe('extensions', function() {
       })
     })
     it('should delegate polling to provided generator', function(done) {
-      let c = chan(2), fnNext = mock(false), fnErr = mock()
+      let c = chan(2),
+        fnNext = mock(false),
+        fnErr = mock()
       function* gen(next, err) {
         err(next(yield c))
         err(next(yield c))
       }
-      let cgen = { x: gen }, handler = { x: [fnNext, fnErr] }
+      let cgen = { x: gen },
+        handler = { x: [fnNext, fnErr] }
       let handles = beginPolling(handler, null, cgen)
       go(function*() {
         yield put(c, true)
@@ -240,7 +279,9 @@ describe('extensions', function() {
       })
     })
     it('closing a polling channel should terminate polling', function(done) {
-      let c1 = chan(), c2 = chan(), co = { x: [c1, c2] }
+      let c1 = chan(),
+        c2 = chan(),
+        co = { x: [c1, c2] }
       let h = { x: assert.fail }
       beginPolling(h, null, co)
       go(function*() {
@@ -253,7 +294,10 @@ describe('extensions', function() {
     it('closing a channel returned by polling channel should not terminate polling', function(
       done
     ) {
-      let c1 = chan(1), c2 = chan(1), c3 = chan(1), co = { x: c1 }
+      let c1 = chan(1),
+        c2 = chan(1),
+        c3 = chan(1),
+        co = { x: c1 }
       let fn = mock()
       let h = { x: fn }
       putAsync(c2, 42)
@@ -276,7 +320,9 @@ describe('extensions', function() {
   describe('#endPolling', function() {
     it('should end polling for all processes', function(done) {
       let co = { x: chan(), y: chan() }
-      let i = 0, fn = () => ++i, h = { x: fn, y: fn }
+      let i = 0,
+        fn = () => ++i,
+        h = { x: fn, y: fn }
       putAsync(co.x, true)
       let handles = beginPolling(h, null, co)
       eq(i, 1)
@@ -293,7 +339,9 @@ describe('extensions', function() {
     })
     it('should end polling for the process identified by provided key', function(done) {
       let co = { x: chan(), y: chan() }
-      let i = 0, fn = () => ++i, h = { x: fn, y: fn }
+      let i = 0,
+        fn = () => ++i,
+        h = { x: fn, y: fn }
       putAsync(co.x, true)
       let handles = beginPolling(h, null, co)
       eq(i, 1)
@@ -315,7 +363,8 @@ describe('extensions', function() {
   })
   describe('#putter', function() {
     it('puts a wrapped message on channel', function(done) {
-      let c = chan(), msg = { x: 1 }
+      let c = chan(),
+        msg = { x: 1 }
       takeAsync(c, m => {
         assert(m.passed)
         eq(m.value, msg)
@@ -324,7 +373,8 @@ describe('extensions', function() {
       putter(c)(msg)
     })
     it('puts message, wraps if required', function(done) {
-      let c = chan(), msg = Message.pass({ x: 1 })
+      let c = chan(),
+        msg = Message.pass({ x: 1 })
       takeAsync(c, m => {
         oeq(m, msg)
         done()
@@ -332,7 +382,8 @@ describe('extensions', function() {
       putter(c)(msg)
     })
     it('puts message asis', function(done) {
-      let c = chan(), msg = { x: 1 }
+      let c = chan(),
+        msg = { x: 1 }
       takeAsync(c, m => {
         eq(m, msg)
         done()
@@ -340,7 +391,9 @@ describe('extensions', function() {
       putter(c, { asis: true })(msg)
     })
     it('puts message with delay', function(done) {
-      let i = 0, c = chan(), putWithDelay = putter(c, { delay: 100 })
+      let i = 0,
+        c = chan(),
+        putWithDelay = putter(c, { delay: 100 })
       setTimeout(() => ++i, 20)
       takeAsync(c, m => {
         assert(i > 0)
@@ -350,7 +403,8 @@ describe('extensions', function() {
       putWithDelay(true)
     })
     it('puts message with delay then closes', function(done) {
-      let c = chan(), putAndClose = putter(c, { close: true })
+      let c = chan(),
+        putAndClose = putter(c, { close: true })
       takeAsync(c, m => {
         assert(m.value)
         assert(c.closed)
@@ -359,7 +413,8 @@ describe('extensions', function() {
       putAndClose(true)
     })
     it('puts message then closes with delay', function(done) {
-      let c = chan(), putAndClose = putter(c, { close: true, closeDelay: 0 })
+      let c = chan(),
+        putAndClose = putter(c, { close: true, closeDelay: 0 })
       takeAsync(c, m => {
         assert(m.value)
         assert(!c.closed)
@@ -380,8 +435,12 @@ describe('extensions', function() {
       setTimeout(done)
     })
     it('puts on a proxy channel until closed', function(done) {
-      let c = chan(), proxy = chan(), msg1 = { x: 1 }, msg2 = { x: 2 }
-      let p = putter(c, { proxy }), m
+      let c = chan(),
+        proxy = chan(),
+        msg1 = { x: 1 },
+        msg2 = { x: 2 }
+      let p = putter(c, { proxy }),
+        m
       p(msg2)
       go(function*() {
         m = yield c

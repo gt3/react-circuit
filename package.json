@@ -8,7 +8,7 @@
     "test": "cross-env BABEL_ENV=test jest --useStderr",
     "cover": "cross-env BABEL_ENV=test jest --coverage",
     "format": "prettier --no-semi --single-quote --print-width 100 --write \"{src,test}/**/*.js\"",
-    "lint": "npm run format && eslint -c ./config/eslint/.eslintrc.json --ignore-path .gitignore src/**",
+    "lint": "npm run format && eslint --ignore-path .gitignore src/**",
     "build": "rollup -c && rollup -c --environment DIST",
     "prepublish": "npm run build"
   },
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/gt3/react-circuit#readme",
   "devDependencies": {
+    "@gt3/eslint-config": "gist:eb3f2c746d399500ec5d8937ecee59b3",
     "babel-cli": "^6.18.0",
     "babel-jest": "^17.0.0",
     "babel-plugin-dev-expression": "^0.2.1",
@@ -57,6 +58,9 @@
     "invariant": "^2.2.2",
     "react-addons-shallow-compare": "^15.5.2",
     "warning": "^3.0.0"
+  },
+  "eslintConfig": {
+    "extends": "@gt3"
   },
   "files": [
     "dist",

@@ -29,7 +29,8 @@ let wrapState = (updater, args, state) => {
 
 let shallowCompare = (instance, nextP, nextS) => {
   if (!instance) return true
-  let state = unwrapState(instance.state), props = instance.props
+  let state = unwrapState(instance.state),
+    props = instance.props
   return _shallowCompare({ state, props }, nextP, unwrapState(nextS))
 }
 
@@ -46,7 +47,7 @@ let handlerFormatters = [
   pipe(errorHandlerFormat, publisherFormat)
 ]
 let getHandlerFormatters = isRenderP =>
-  (isRenderP ? handlerFormatters : handlerFormatters.slice(0, 2))
+  isRenderP ? handlerFormatters : handlerFormatters.slice(0, 2)
 
 let deriveHandlers = (source, target, mapper, filter) => {
   invariant(!!source, 'Missing source - could not dervie handlers')

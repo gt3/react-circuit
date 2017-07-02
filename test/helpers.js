@@ -1,8 +1,10 @@
 import assert from 'assert'
-let eq = assert.strictEqual, neq = assert.notStrictEqual
+let eq = assert.strictEqual,
+  neq = assert.notStrictEqual
 const str = JSON.stringify
 const compareObjects = (...objs) => {
-  let [first, ...rest] = objs, t = str(first)
+  let [first, ...rest] = objs,
+    t = str(first)
   return rest.every(v => t === str(v))
 }
 const oeq = (o1, o2, ...args) => assert.ok.call(null, compareObjects(o1, o2), ...args)

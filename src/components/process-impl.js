@@ -20,15 +20,17 @@ function wrapRenderProcessHandler(renderCircuit, args, handlers) {
 }
 
 let getHandlerWrapper = (isRenderP, renderCircuit, args) =>
-  (isRenderP
+  isRenderP
     ? wrapRenderProcessHandler.bind(null, renderCircuit, args)
-    : wrapProcessHandler.bind(null, args))
+    : wrapProcessHandler.bind(null, args)
 
 export let makeRefs = instance => {
   let { props, context } = instance
   let find = firstHas(instance, props, context)
-  let intake = find('intake'), handlers = find('handlers')
-  let renderCircuit = firstHas(instance, props)('renderCircuit'), isRenderP = !!renderCircuit
+  let intake = find('intake'),
+    handlers = find('handlers')
+  let renderCircuit = firstHas(instance, props)('renderCircuit'),
+    isRenderP = !!renderCircuit
   if (isFn(intake)) intake = intake(context.intake)
   if (!handlers) {
     let formatters = getHandlerFormatters(isRenderP)

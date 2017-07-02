@@ -43,7 +43,9 @@ describe('Result', function() {
   })
   it('subscriber should register handlers with subscribe', function() {
     let subscribe = { x1: mock(), x2: mock() }
-    let x1h = mock(), x1herr = mock(), x2h = mock()
+    let x1h = mock(),
+      x1herr = mock(),
+      x2h = mock()
     let handlers = { x1: [x1h, x1herr], x2: [x2h] }
     subscriber({ subscribe, handlers })
     eq(subscribe.x1.mock.calls[0][0], x1h)
@@ -51,7 +53,8 @@ describe('Result', function() {
     eq(subscribe.x2.mock.calls[0][0], x2h)
   })
   it('default handler should update component state', function(done) {
-    let c = outtake.res, err = new Error('xxx')
+    let c = outtake.res,
+      err = new Error('xxx')
     putAsync(c, state)
     go(function*() {
       eq(child.mock.calls.length, 0)

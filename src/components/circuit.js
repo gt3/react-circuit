@@ -16,7 +16,8 @@ export default class Circuit extends Component {
   bootstrap() {
     let renderCircuit = this.renderCircuit.bind(this)
     let registerRefHandler = this.registerRefHandler.bind(this)
-    let { props, context } = this, child = props.children
+    let { props, context } = this,
+      child = props.children
     let { app, transport, services, cleanup } = isValidElement(child)
       ? { app: child }
       : child.call(null, renderCircuit, registerRefHandler, context)
@@ -29,7 +30,7 @@ export default class Circuit extends Component {
     return this.setState(wrapState.bind(null, updater, args), cb)
   }
   registerRefHandler(refHandler, ...args) {
-    return ref => this.refState = refHandler.call(null, ref, this.refState, ...args)
+    return ref => (this.refState = refHandler.call(null, ref, this.refState, ...args))
   }
   componentWillMount() {
     this.publishers = []
