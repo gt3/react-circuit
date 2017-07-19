@@ -3,13 +3,13 @@
   "version": "0.4.0",
   "description": "React-friendly interface to CSP channels",
   "main": "./lib/react-circuit.js",
-  "module": "./lib/react-circuit.mjs",
+  "module": "./lib/react-circuit.es.js",
   "scripts": {
     "test": "cross-env BABEL_ENV=test jest --useStderr",
     "cover": "cross-env BABEL_ENV=test jest --coverage",
     "format": "prettier --no-semi --single-quote --print-width 100 --write \"{src,test}/**/*.js\"",
     "lint": "npm run format && eslint --ignore-path .gitignore src/**",
-    "build": "rollup -c && rollup -c --environment DIST",
+    "build": "rollup -c",
     "prepublish": "npm run build"
   },
   "repository": "gt3/react-circuit",
@@ -27,7 +27,6 @@
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
-    "babel-preset-babili": "0.0.12",
     "babel-preset-es2016": "^6.22.0",
     "babel-preset-stage-2": "^6.22.0",
     "cross-env": "^3.1.3",
@@ -39,7 +38,8 @@
     "react-dom": "^15.5.4",
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
-    "rollup-plugin-babili": "^2.0.0"
+    "rollup-plugin-commonjs": "^8.0.2",
+    "rollup-plugin-node-resolve": "^3.0.0"
   },
   "peerDependencies": {
     "babel-plugin-dev-expression": "^0.2.1",
