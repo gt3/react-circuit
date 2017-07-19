@@ -6,7 +6,7 @@ import replace from 'rollup-plugin-replace'
 
 const lib = {
   entry: './src/index.js',
-  globals: { 'react': 'react', 'prop-types': 'PropTypes', 'js-csp': 'csp' },
+  globals: { 'react': 'React', 'prop-types': 'PropTypes', 'js-csp': 'csp' },
   external: ['react','js-csp','prop-types'],
   plugins: [
     babel({exclude: 'node_modules/**'}),
