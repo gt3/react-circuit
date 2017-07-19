@@ -1,5 +1,5 @@
 {
-  "plugins": [ "dev-expression", "transform-react-jsx" ],
+  "plugins": [ "transform-react-jsx" ],
   "presets": ["es2016","stage-2"],
   "env": {
     "test": {

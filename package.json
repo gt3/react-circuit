@@ -23,7 +23,6 @@
     "@gt3/eslint-config": "gist:eb3f2c746d399500ec5d8937ecee59b3",
     "babel-cli": "^6.18.0",
     "babel-jest": "^17.0.0",
-    "babel-plugin-dev-expression": "^0.2.1",
     "babel-plugin-transform-class-properties": "^6.19.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.18.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
@@ -39,10 +38,10 @@
     "rollup": "^0.41.6",
     "rollup-plugin-babel": "^2.7.1",
     "rollup-plugin-commonjs": "^8.0.2",
-    "rollup-plugin-node-resolve": "^3.0.0"
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollup-plugin-replace": "^1.1.1"
   },
   "peerDependencies": {
-    "babel-plugin-dev-expression": "^0.2.1",
     "js-csp": "^0.9.3",
     "react": "^15.5.4",
     "prop-types": "^15.5.10"
