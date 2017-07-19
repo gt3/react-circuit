@@ -1,6 +1,6 @@
 {
   "name": "react-circuit",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "React-friendly interface to CSP channels",
   "main": "./lib/react-circuit.js",
   "module": "./lib/react-circuit.es.js",
